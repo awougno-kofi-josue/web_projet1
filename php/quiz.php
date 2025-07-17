@@ -59,21 +59,37 @@ $questions=$result->fetch_all(MYSQLI_ASSOC);
             width: 80%;
         }
         
-#debut button{
-    display: block;
-    width: 60%;
-    max-width: 400px;
-    margin: 10px auto;
-    padding: 12px 20px;
-    font-size: 16px;
-    font-weight: bold;
-    background-color: #f0f0f0;
-    border: 2px solid #007bff;
-    border-radius: 15px;
-    cursor: pointer;
-    color: #333;
+    #debut button{
+        display: block;
+        width: 60%;
+        max-width: 400px;
+        margin: 10px auto;
+        padding: 12px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #f0f0f0;
+        border: 2px solid #007bff;
+        border-radius: 15px;
+        cursor: pointer;
+        color: #333;
+    }
+    #clas {
+    text-align: center;
+    margin-top: 20px;
+    }
+    #clas a {
+        font-weight: bold;
+        display: inline-block;
+        padding: 10px 20px;
+        color: #007bff;
+        border-radius: 20px;
+        text-decoration: none;
+        transition: color 0.3s ease;
+    }
+    #clas a:hover {
+        color: #25201aff;
+        box-shadow: 2px 2px #333;
 }
-
     </style>
 </head>
 <body>
@@ -97,7 +113,11 @@ $questions=$result->fetch_all(MYSQLI_ASSOC);
             <p id="time" style="font-weight:bold; color: red"></p>
             <h3 id="question"></h3>
             <div id="options"></div>
+
             <button id="suivant" style="display: block;" class="btn_sous">Suivant </button>
+            <p id="clas" style="display: none;">
+                <a href="integre_classement.php?id=<?=$id_domaine; ?>">Voir votre position dans le classement général</a>
+            </p>
         </div>
 
         
@@ -152,7 +172,7 @@ $questions=$result->fetch_all(MYSQLI_ASSOC);
         buttons.forEach(btn=>{
             btn.addEventListener("click",()=>{
 
-
+                
                 buttons.forEach(b=>b.disabled=true);
                 if (aReondu)return;
                 aReondu=true;
@@ -164,12 +184,18 @@ $questions=$result->fetch_all(MYSQLI_ASSOC);
 
                 }else{
                     btn.style.backgroundColor='red';
-                    
+                    buttons.forEach(b => {
+                    if (b.textContent === q.reponse) {
+                        b.style.backgroundColor = 'green';
+                    }
+                    });
                 }
                 
+            });
+
         
                 document.getElementById("suivant").style.display="inline-block";
-            })
+            
         })
 
 
@@ -218,10 +244,11 @@ $questions=$result->fetch_all(MYSQLI_ASSOC);
             document.getElementById('demarrage').textContent='Quiz terminé';
             document.getElementById('options').style.display="none"
             document.getElementById('suivant').textContent="Recommencer";
-            
-
+            document.getElementById('clas').style.display="flex";
+            localStorage.setItem("scoreFinal", score)
             document.getElementById('suivant').addEventListener("click",()=>{
             const dem=document.getElementById('suivant');
+            
             if(dem.textContent==='Recommencer'){
             location.reload();
             return;
@@ -229,6 +256,7 @@ $questions=$result->fetch_all(MYSQLI_ASSOC);
         });
         
     }
+    
     })
 
 </script>
